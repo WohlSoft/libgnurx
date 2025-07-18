@@ -26,6 +26,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <limits.h>
 
 #if defined(__MINGW32_VERSION) || defined(_MSC_VER)
 #define strcasecmp stricmp
