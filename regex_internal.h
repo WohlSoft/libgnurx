@@ -392,16 +392,16 @@ typedef struct re_dfa_t re_dfa_t;
 # endif
 #endif
 
-static reg_errcode_t re_string_realloc_buffers (re_string_t *pstr,
+reg_errcode_t re_string_realloc_buffers (re_string_t *pstr,
 						int new_buf_len)
      internal_function;
 #ifdef RE_ENABLE_I18N
 static void build_wcs_buffer (re_string_t *pstr) internal_function;
 static int build_wcs_upper_buffer (re_string_t *pstr) internal_function;
 #endif /* RE_ENABLE_I18N */
-static void build_upper_buffer (re_string_t *pstr) internal_function;
-static void re_string_translate_buffer (re_string_t *pstr) internal_function;
-static unsigned int re_string_context_at (const re_string_t *input, int idx,
+void build_upper_buffer (re_string_t *pstr) internal_function;
+void re_string_translate_buffer (re_string_t *pstr) internal_function;
+unsigned int re_string_context_at (const re_string_t *input, int idx,
 					  int eflags)
      internal_function __attribute ((pure));
 #define re_string_peek_byte(pstr, offset) \
@@ -775,5 +775,94 @@ re_string_elem_size_at (const re_string_t *pstr, int idx)
     return 1;
 }
 #endif /* RE_ENABLE_I18N */
+
+extern void re_string_construct_common (const char *str, int len,
+                                       re_string_t *pstr,
+                                       RE_TRANSLATE_TYPE trans, int icase,
+                                       const re_dfa_t *dfa) internal_function;
+extern void free_state (re_dfastate_t *state);
+
+extern reg_errcode_t
+    internal_function
+    re_string_construct (re_string_t *pstr, const char *str, int len,
+                        RE_TRANSLATE_TYPE trans, int icase, const re_dfa_t *dfa);
+
+extern void internal_function re_string_destruct (re_string_t *pstr);
+
+extern reg_errcode_t
+    internal_function
+    re_node_set_init_copy (re_node_set *dest, const re_node_set *src);
+
+extern int
+    internal_function __attribute ((pure))
+    re_node_set_contains (const re_node_set *set, int elem);
+
+extern reg_errcode_t
+    internal_function
+    re_node_set_merge (re_node_set *dest, const re_node_set *src);
+
+extern re_dfastate_t *
+    internal_function
+    re_acquire_state_context (reg_errcode_t *err, const re_dfa_t *dfa,
+                             const re_node_set *nodes, unsigned int context);
+extern int
+    internal_function
+    re_dfa_add_node (re_dfa_t *dfa, re_token_t token);
+
+extern reg_errcode_t
+    internal_function
+    re_node_set_init_2 (re_node_set *set, int elem1, int elem2);
+
+extern reg_errcode_t
+    internal_function
+    re_node_set_init_1 (re_node_set *set, int elem);
+
+extern reg_errcode_t
+    internal_function
+    re_string_allocate (re_string_t *pstr, const char *str, int len, int init_len,
+                       RE_TRANSLATE_TYPE trans, int icase, const re_dfa_t *dfa);
+
+extern reg_errcode_t
+    internal_function
+    re_string_reconstruct (re_string_t *pstr, int idx, int eflags);
+
+extern int
+    internal_function
+    re_node_set_insert (re_node_set *set, int elem);
+
+extern reg_errcode_t
+    internal_function
+    re_node_set_init_union (re_node_set *dest, const re_node_set *src1,
+                           const re_node_set *src2);
+
+extern int
+    internal_function
+    re_node_set_insert_last (re_node_set *set, int elem);
+
+extern reg_errcode_t
+    internal_function
+    re_node_set_alloc (re_node_set *set, int size);
+
+extern unsigned char
+    internal_function __attribute ((pure))
+    re_string_peek_byte_case (const re_string_t *pstr, int idx);
+
+extern unsigned char
+    internal_function __attribute ((pure))
+    re_string_fetch_byte_case (re_string_t *pstr);
+
+extern re_dfastate_t *
+    internal_function
+    re_acquire_state (reg_errcode_t *err, const re_dfa_t *dfa,
+                     const re_node_set *nodes);
+
+extern reg_errcode_t
+    internal_function
+    re_node_set_add_intersect (re_node_set *dest, const re_node_set *src1,
+                              const re_node_set *src2);
+
+extern void
+    internal_function
+    re_node_set_remove_at (re_node_set *set, int idx);
 
 #endif /*  _REGEX_INTERNAL_H */
